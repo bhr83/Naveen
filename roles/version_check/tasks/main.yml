@@ -1,0 +1,57 @@
+- name: check /apps dir exists
+  stat:
+    path: "{{ server_dir }}"
+  register: app_dir
+
+- name: fail play if {{server_dir}} not exists
+  fail:
+    msg: "{{ server_dir }} not exists"
+  when: app_dir.stat.isdir|d(false)|bool == false
+
+- name: Fetch store names
+  shell: "find . -type d -name 'epsadmin_*' -prune | grep -v '/\\.' | tr -d './'"
+  args:
+    chdir: "{{ server_dir }}"
+  register: store_names
+
+- name: create temp file
+  tempfile:
+    state:  file
+  register: temp_config
+
+- name: set tempfile path
+  set_fact:
+    tmp_file: "{{ temp_config.path }}"
+
+- name: write version header to tmpfile
+  lineinfile:
+    path: "{{ tmp_file }}"
+    line: "{{ item }}"
+  loop:
+    - 'Version Details'
+    - '----------------'
+
+- include: rel_ver_check.yml
+  loop: "store_names.stdout_lines"
+  loop_control:
+    loop_var: store_name
+
+- name: write store bounce header to tmpfile
+  lineinfile:
+    path: "{{ tmp_file }}"
+    line: "{{ item }}"
+  loop:
+    - 'Store bounce Details'
+    - '----------------'
+
+- include: store_bounce.yml
+  loop: "store_names.stdout_lines"
+  loop_control:
+    loop_var: store_name
+
+- name: diplay versions and bounce dates
+  shell: cat "{{ tmp_file }}"
+  register: version_info
+
+- debug:
+    msg: "{{ version_info }}"

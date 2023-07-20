@@ -1,0 +1,53 @@
+- name: set store_no
+  set_fact:
+    store_no: "{{ store_name[-4:]}}"
+
+- block:
+    - name: check /apps/store/eps.version exist
+      stat:
+        path: '/apps/epsadmin/EPS/eps.version'
+      register: epsver_path
+
+    - block:
+        - name: get ReleaseVersion
+          shell: "pbrun su - {{store_name}} -c \"cat /apps/epsadmin/EPS/logs/server_start_times.log | grep started | tail -1\""
+          register: version
+
+        - name: write version to tmpfile
+          lineinfile:
+            path: "{{ tmp_file }}"
+            line: "{{ store_name }}:{{ version.stdout }}"
+      when: epsver_path.stat.exists
+
+    - name: write version path not exist to tmpfile
+      lineinfile:
+        path: "{{ tmp_file }}"
+        line: "{{ store_name }}:'path not exist to check bounce date'"
+      when: not epsver_path.stat.exists
+  when: "'1088' in store_no"
+
+- block:
+    - name: check /apps/store/eps.version exist
+      stat:
+        path: '{{store_name}}/eps.version'
+      args:
+        chdir: "{{ server_dir }}"
+      register: epsver_path
+
+    - block:
+        - name: get ReleaseVersion
+          shell: "pbrun su - {{store_name}} -c \"cat {{ server_dir }}/{{ store_name }}/EPS/logs/server_start_times.log | grep stopped | tail -1\""
+          register: version
+
+        - name: write version to tmpfile
+          lineinfile:
+            path: "{{ tmp_file }}"
+            line: "{{ store_name }}:{{ version.stdout }}"
+      when: epsver_path.stat.exists
+
+    - name: write version path not exist to tmpfile
+      lineinfile:
+        path: "{{ tmp_file }}"
+        line: "{{ store_name }}:'path not exist to check release'"
+      when: not epsver_path.stat.exists
+  when: "'1088' not in store_no"
