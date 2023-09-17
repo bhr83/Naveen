@@ -1,0 +1,73 @@
+- hosts: localhost
+  gather_facts: no
+
+  tasks:
+  - set_fact:
+      version: 'epsadmin_900001909:KP_2023.01.14'
+
+  - set_fact:
+      version1: "{{ version | regex_search('KP_(.+)', '\\1')|first}}"
+
+
+    #  - shell: "cat classpath | grep -o 2023.01.14.*.jar"
+  - shell: "cat classpath |  sed -n 's/.*\\(2023.01.14.*.jar\\).*/\\1/p'"
+    #- shell: "cat classpath | grep -o {{ version1 }}.*.jar"
+    register: classpath
+
+  - debug: var=classpath
+
+  - name: create temp file
+    tempfile:
+      state:  file
+    register: temp_config
+
+  - name: set tempfile path
+    set_fact:
+      tmp_file: "{{ temp_config.path }}"
+
+  - name: write version header to tmpfile
+    lineinfile:
+      path: "{{ tmp_file }}"
+      line: "{{ item }}"
+    loop:
+      - 'Version Details'
+      - '----------------'
+
+  - name: create temp file
+    tempfile:
+      state:  file
+    register: patch_ver
+
+  - name: set tempfile path
+    set_fact:
+      patch_ver_tmp_file: "{{ patch_ver.path }}"
+
+  - name: write version header to tmpfile
+    lineinfile:
+      path: "{{ patch_ver_tmp_file }}"
+      line: "{{ item }}"
+    loop:
+      - 'Patch version Details'
+      - '-------------------'
+
+  - name: write version to tmpfile
+    lineinfile:
+      path: "{{ tmp_file }}"
+      line: 'hello'
+
+  - name: write version to tmpfile
+    lineinfile:
+      path: "{{ patch_ver_tmp_file }}"
+      line: "'key':{{classpath.stdout|replace('\n',',')}}"
+
+  - shell: cat "{{ patch_ver_tmp_file }}"
+    register: output
+
+  - debug:
+      msg: "{{ output.stdout }}"
+  - name: diplay versions and bounce dates
+    shell: cat "{{ tmp_file }}" "{{patch_ver_tmp_file}}"
+    register: version_info
+
+  - debug:
+      msg: "{{ version_info }}"

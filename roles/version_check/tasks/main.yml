@@ -42,7 +42,7 @@
     line: "{{ item }}"
   loop:
     - 'Store bounce Details'
-    - '----------------'
+    - '-------------------'
 
 - include: store_bounce.yml
   loop: "store_names.stdout_lines"

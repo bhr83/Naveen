@@ -1,0 +1,15 @@
+---
+- hosts: localhost
+  gather_facts: no
+  vars_files:
+    - input_original.yml
+  tasks:
+    - shell: "cat input_original.yml | grep 'containerId'"
+      register: container_info
+
+    - debug: 
+        msg: "{{ container_info.stdout_lines  }}"     
+
+    # - assert:
+    #     that: CONT_ID in container_info.stdout
+    #     fail_msg: "container_id not exists"

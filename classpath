@@ -1,0 +1,8 @@
+export CLASSPATH=${EPS2_LIB}/2023.01.14_Server_Patch03.jar
+export CLASSPATH=${CLASSPATH}:${EPS2_LIB}/2023.01.14_Server_Patch02.jar
+export CLASSPATH=${CLASSPATH}:${EPS2_LIB}/2023.01.14_Server_Patch01.jar
+export CLASSPATH=${CLASSPATH}:${EPS2_LIB}/slf4j-api-1.7.30.jar
+export CLASSPATH=${CLASSPATH}:${EPS2_LIB}/log4j-slf4j-impl-2.17.1.jar
+export CLASSPATH=${CLASSPATH}:${EPS2_LIB}/log4j-api-2.17.1.jar
+export CLASSPATH=${CLASSPATH}:${EPS2_LIB}/log4j-core-2.17.1.jar
+epsadmin_900001909-szabap33:/apps/ep

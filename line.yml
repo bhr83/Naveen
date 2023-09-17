@@ -1,0 +1,12 @@
+---
+- hosts: localhost
+  gather_facts: no
+
+  tasks:
+    - lineinfile:
+        path: checkline.txt
+        line: 'APP:1123'
+    - lineinfile:
+        path: checkline.txt
+        regex: 'APP:1123'
+        line: 'APP:1123,patch12,pathc34'

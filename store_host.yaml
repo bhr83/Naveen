@@ -1,0 +1,54 @@
+---
+- name: find Hosts
+  hosts: localhost
+  gather_facts: no
+  
+  vars:
+    hosts_info: {}
+    new_hosts_info: {}
+
+  tasks:
+    - name: Read store to host mapping info from CSV file
+      read_csv:
+        path: "./roles/version_check/files/store_host.csv"
+        fieldnames: id,store_num,host
+        delimiter: ','
+      register: store_host
+
+    - set_fact:
+        store_ids_list: "{{ store_ids.split(',') }}"
+
+    - name: create host_info dict store_no as key and hostname as value
+      set_fact:
+        hosts_info: "{{ hosts_info | combine({ item : store_host.list | selectattr('store_num','==',item) | map(attribute='host')|list|first|default() }) }}"    
+      loop: "{{ store_ids_list }}"
+
+    - debug: var=hosts_info  
+
+    - name: Find store_ids which don't have any matching hosts
+      set_fact:
+        emptyhost_store_ids: "{{ hosts_info | dict2items | selectattr('value', 'equalto', '') | map(attribute='key') | list }}"
+
+    - debug: var=emptyhost_store_ids   
+
+    - fail:
+        msg: "the store ids {{ emptyhost_store_ids }} doesn't have matching host"
+      when: emptyhost_store_ids | length > 0     
+
+    - name: Transform dictionary host as key and store_ids as values
+      set_fact:
+        new_hosts_info: "{{ new_hosts_info | combine({item.value: (new_hosts_info[item.value]  + ',' + item.key) if new_hosts_info[item.value] | default('') else item.key}) }}"
+      loop: "{{ hosts_info | dict2items }}"
+
+    - name: create temp group 
+      add_host:
+        name: '{{ item.key }}'
+        storeids: '{{ item.value }}'
+        groups: store_group
+      with_dict: "{{ new_hosts_info }}"
+
+- hosts: "store_group"
+  gather_facts: no
+
+  tasks:
+    - debug: var=storeids

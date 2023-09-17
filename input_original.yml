@@ -1,0 +1,33 @@
+omegaBackup: 
+    useBackupStore: true
+ruleEngine: 
+    C2PartialDispenseCount: 1,
+    baseUrl: https://pimsqa.appl.kp.org:11102/kie-server/services/rest/server/containers/,
+    connectTimeout: 10000,
+    connectionRequestTimeout: 5000,
+    hierarchy: 
+        modelName: HierarchyAccessDataConfiguration,
+        modelNamespace: https://kiegroup.org/dmn/HierarchyAccessDataConfiguration
+    
+    httpClientDefaultMaxPerRoute: 20,
+    httpClientMaxTotal: 100,
+    keystorePassword: B053EAZQteIgOL2X+gO/NA==,
+    keystore_EPSv1Trust: EPSv1Trust.jks,
+    keystore_EPSv1Trust_F5: EPSv1Trust.jks,
+    mailAuthority: 
+        modelName: MailAuthorityExclusionDMN,
+        modelNamespace: https://kiegroup.org/dmn/MailAuthorityExclusionDMN
+    
+    moCheckService: 
+        modelName: MailEligibilityCheckDMN,
+        modelNamespace: https://kiegroup.org/dmn/MailEligibilityCheckDMN
+    
+    moEligiblity: 
+        containerId: MailEligibilityCheck_3.0.5-SNAPSHOT,
+        processId: MailEligibilityCheck.EligibilityCheckBusinessProcess,
+        signal: end_process_signal,
+        variable: moeeRxDataList
+    moEligiblity1: 
+        containerId: MailEligibilityCheck_3.0.7-SNAPSHOT,
+    moEligiblity2: 
+        containerId: MailEligibilityCheck_3.0.7-SNAPSHOT,            
