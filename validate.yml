@@ -1,0 +1,9 @@
+- block:
+    - name: validate yaml
+      debug:
+        msg: "valid yaml {{ yaml_name }}"
+      when: lookup('file', yaml_name, errors='ignore') |from_yaml
+      delegate_to: localhost     
+  rescue:
+    - debug:
+        msg: "Invalid yaml {{yaml_name}}"

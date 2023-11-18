@@ -1,0 +1,24 @@
+---
+- name: Find .properties files and compare
+  hosts: localhost
+  gather_facts: no
+
+  environment:
+    ANSIBLE_DISPLAY_SKIPPED_HOSTS: "False"
+
+  tasks:        
+    - name: Find .properties files
+      find:
+        paths: C:/cygwin64/home/bindu/playbooks/naveen/prod
+        patterns: "*.properties"
+        recurse: yes
+      register: prop_files
+
+    - name: check if file exists and compare
+      vars:
+        file_name: "{{ item.split('/')[-1] }}"
+        file_src_path: "{{ item }}"
+      include_tasks: compare.yml
+      loop: "{{ prop_files.files | map(attribute='path') | list }}"
+      
+   

@@ -1,0 +1,11 @@
+---
+- hosts: localhost
+  gather_facts: no
+
+  tasks:
+    - set_fact:
+        content: 'MMP rule engine is up and running, response code: 200 ok, version:- kp_203.01.08.9'
+    - name: Grep the last value after version
+      debug: 
+        msg: "VERSION: {{ content | regex_findall('(?:version|VERSION):-\\s*([^\\s]+)') }}"
+

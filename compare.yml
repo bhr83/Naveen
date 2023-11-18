@@ -1,0 +1,28 @@
+- name: Find {{ file_name }}
+  find:
+    paths: "C:/cygwin64/home/bindu/playbooks/naveen/dev"
+    pattern: "{{file_name}}"
+    recurse: yes
+  register: file_info
+
+- name: print msg if file not found "{{ file_name }}"
+  debug: 
+   msg: "file not found {{ file_name}}"
+  when: file_info.matched == 0
+
+- name: check difference if file exists {{ file_name}}
+  block:
+    - name: set file path
+      set_fact:
+        dest_file_path: "{{file_info.files | map(attribute='path') | list | first }}"
+
+    - name: Compare {{ file_name}}
+      shell: "diff -u {{ file_src_path }} {{ dest_file_path }}"
+      register: diff_result
+      ignore_errors: true
+
+    - name: Print differences for {{ file_name}}
+      debug: 
+        msg: "{{ diff_result.stdout_lines }}"
+      when: diff_result.rc != 0
+  when: file_info.matched == 1

@@ -1,0 +1,10 @@
+---
+- hosts: localhost
+  gather_facts: no
+
+  tasks:
+    #- shell: "find . -type f -name 'application-pns2-server*.yml' ! -name '*new.yml' -exec grep 'hello' {} +"
+    - shell: "find /home/bindu/playbooks/naveen -maxdepth 1 -type f -name 'application-*.yml' ! -name '*new.yml' -exec grep 'hello' {} +"
+      #- shell: "grep 'hello' application-pns2-server*.yml --exclude='*new.yml'"
+      register: output
+    - debug: var=output

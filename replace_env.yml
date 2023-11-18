@@ -1,0 +1,9 @@
+---
+- hosts: localhost
+  gather_facts: no
+
+  tasks:
+    - set_fact: 
+        env: "{{ ENV | regex_replace('PNS1','PERF') | regex_replace('PNS2','PERF2') }}"
+
+    - debug: var=env

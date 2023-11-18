@@ -1,0 +1,41 @@
+---
+- hosts: 192.168.62.7
+  gather_facts: yes
+
+  tasks:
+    - name: create temp dir
+      tempfile:
+        state: directory
+      delegate_to: localhost
+      register: temp_config
+
+    - name: set temdir path
+      set_fact:
+        tmp_dir: "{{ temp_config.path }}"
+      delegate_to: localhost
+
+    - name: Find YAML files on remote server
+      find:
+        paths: /home/ubuntu
+        patterns: "test*.yml"
+      register: yml_files
+
+    - name: Fetch YAML files
+      fetch:
+        src: "{{ item.path }}"
+        dest: "{{ tmp_dir }}/"
+        flat: yes
+      loop: "{{ yml_files.files }}"
+        
+    - name: Find yml files
+      find:
+        paths: "{{ tmp_dir }}"
+        patterns: "*.yml"
+      delegate_to: localhost
+      register: yml_files
+
+    - name: validate yaml
+      vars:
+        yaml_name: "{{ item.path }}"
+      include_tasks: validate.yml
+      loop: "{{ yml_files.files }}"

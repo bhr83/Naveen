@@ -1,0 +1,15 @@
+---
+- name: Copy file and print differences
+  hosts: localhost
+  tasks:
+    - name: Copy file1 to file2
+      copy:
+        src: "./prod/instance1/commons-logging.properties"
+        dest: "./dev/commons-logging.properties"
+        checksum: yes
+      register: copy_result
+
+    - name: Print differences
+      debug:
+        msg: "Files are different"
+      when: copy_result.changed

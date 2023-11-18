@@ -11,7 +11,7 @@
     - name: Read store to host mapping info from CSV file
       read_csv:
         path: "./roles/version_check/files/store_host.csv"
-        fieldnames: id,store_num,host
+        fieldnames: env,id,store_num,host
         delimiter: ','
       register: store_host
 
@@ -20,7 +20,7 @@
 
     - name: create host_info dict store_no as key and hostname as value
       set_fact:
-        hosts_info: "{{ hosts_info | combine({ item : store_host.list | selectattr('store_num','==',item) | map(attribute='host')|list|first|default() }) }}"    
+        hosts_info: "{{ hosts_info | combine({ item : store_host.list | selectattr('env','==',ENV) | selectattr('store_num','==',item) | map(attribute='host')|list|first|default() }) }}"    
       loop: "{{ store_ids_list }}"
 
     - debug: var=hosts_info  
@@ -52,3 +52,6 @@
 
   tasks:
     - debug: var=storeids
+    - debug: 
+        msg: "{{ item }}"
+      loop: "{{ storeids.split(',') }}"    
