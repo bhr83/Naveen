@@ -16,11 +16,16 @@
       set_fact:
         dest_file_path: "{{file_info.files | map(attribute='path') | list | first }}"
 
+    # - name: Compare {{ file_name}}
+    #   shell: "diff -u {{ file_src_path }} {{ dest_file_path }}"
+    #   register: diff_result
+    #   ignore_errors: true
     - name: Compare {{ file_name}}
-      shell: "diff -u {{ file_src_path }} {{ dest_file_path }}"
+      shell: "python compare.py {{ file_src_path }} {{ dest_file_path }}"
+      args:
+        executable: /usr/bin/python
       register: diff_result
       ignore_errors: true
-
     - name: Print differences for {{ file_name}}
       debug: 
         msg: "{{ diff_result.stdout_lines }}"
