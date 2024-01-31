@@ -1,3 +1,7 @@
+- name: debug each dict
+  debug: 
+    msg: "{{ config_dict }}"
+
 - name: Convert dictionary to key-value pairs list
   set_fact:
     dict_items: "{{ config_dict | dict2items }}"
@@ -7,23 +11,22 @@
     first_key_value_pair: "{{ dict_items | first }}"
 
 - debug: var=first_key_value_pair
+
 - name: debug tag key
   debug:
-    msg: "{{ tag_key }}"
-- debug: 
-    msg: "{{ search_in_dict[tag_key] }}"
+    msg: "{{ config1_tag_key }}"
 
 - name: Find dictionary by key match
   set_fact:
-    matching_dict: "{{ search_in_dict[tag_key] | selectattr(first_key_value_pair['key'], 'equalto', first_key_value_pair['value']) | first | d({}) }}"
+    matching_dict: "{{ search_in_dict[config1_tag_key] | selectattr(first_key_value_pair['key'], 'equalto', first_key_value_pair['value']) | first | d({}) }}"
 
 - name: Display the matching dictionary
   debug:
     var: matching_dict
 
-- name: write content to csv row
+- name: write content to csv for each keyvalue pair in dict
   vars:
-    csv_row: "{{tag_key}}_{{file1config.key}},{{file1config.value}},{{matching_dict[file1config.key] | d()}}"
+    csv_row: "{{ conf_file_name }}, {{config1_tag_key}}_{{file1config.key}},{{file1config.value | replace(',','|')}},{{matching_dict[file1config.key] | replace(',','|') | d()}}"
   lineinfile:
     line: "{{ csv_row }}"
     dest: output.csv

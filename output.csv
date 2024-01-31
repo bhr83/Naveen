@@ -1,23 +1,32 @@
-key,file1,file2
-Configuration_@status,warn,warn
-Configuration_Appenders_Console_@name,console,console
-Configuration_Appenders_Console_@target,SYSTEM_OUT,SYSTEM_OUT
-Configuration_Appenders_Console_PatternLayout_@pattern,%-5p: %c - %m%n,%-5p: %c - %m%n
-Configuration_Appenders_RollingFile_@name,rollingFile,rollingFile
-Configuration_Appenders_RollingFile_@immediateFlush,true,true
-Configuration_Appenders_RollingFile_@fileName,/logs/NCPDP/DEV1/R7/RxNotifierUI/RxNotifierUI.log,/logs/NCPDP/DEV1/R7/RxNotifierUI/RxNotifierUI.log
-Configuration_Appenders_RollingFile_@filePattern,/logs/OPPR_cert/RxNotifier/RxNotifierUI-%i.log,/logs/OPPR_cert/RxNotifier/RxNotifierUI-%i.log
-Configuration_Appenders_RollingFile_PatternLayout_Pattern,%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ} |[%t]| %p | %c | %m%n,%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ} |[%t]| %p | %c | %m%n
-Configuration_Appenders_RollingFile_Policies_SizeBasedTriggeringPolicy_@size,5 MB,5 MB
-Configuration_Appenders_RollingFile_DefaultRolloverStrategy_@max,10,10
-Configuration_Loggers_Root_@level,info,info
-Configuration_Loggers_Root_AppenderRef_@ref,rollingFile,rollingFile
-Configuration_Loggers_Logger_@name,org.apache.log4j.xml,org.apache.log4j.xml
-Configuration_Loggers_Logger_@level,info,info
-Configuration_Loggers_Logger_@name,org.kp.oppr,org.kp.oppr
-Configuration_Loggers_Logger_@level,debug,debug
-Configuration_Loggers_Logger_@additivity,false,false
-Configuration_Loggers_Logger_AppenderRef,{'@ref': 'rollingFile'},{'@ref': 'rollingFile'}
-Configuration_Loggers_Logger_@name,org.springframework,org.springframework
-Configuration_Loggers_Logger_@name,org.springframework.context,org.springframework.context
-Configuration_Loggers_Logger_@name,org.springframework.web,org.springframework.web
+config_file,key,file1,file2
+dispatcher.xml,beans_@xmlns,http://www.springframework.org/schema/beans,http://www.springframework.org/schema/beans
+dispatcher.xml,beans_@xmlns:mvc,http://www.springframework.org/schema/mvc,http://www.springframework.org/schema/mvc
+dispatcher.xml,beans_@xmlns:xsi,http://www.w3.org/2001/XMLSchema-instance,http://www.w3.org/2001/XMLSchema-instance
+dispatcher.xml,beans_@xmlns:p,http://www.springframework.org/schema/p,http://www.springframework.org/schema/p
+dispatcher.xml,beans_@xmlns:aop,http://www.springframework.org/schema/aop,http://www.springframework.org/schema/aop
+dispatcher.xml,beans_@xmlns:tx,http://www.springframework.org/schema/tx,http://www.springframework.org/schema/tx
+dispatcher.xml,beans_@xmlns:context,http://www.springframework.org/schema/context,http://www.springframework.org/schema/context
+dispatcher.xml,beans_@xsi:schemaLocation,http://www.springframework.org/schema/beans        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd        http://www.springframework.org/schema/context        http://www.springframework.org/schema/context/spring-context-3.0.xsd        http://www.springframework.org/schema/mvc   http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd,http://www.springframework.org/schema/beans        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd        http://www.springframework.org/schema/context        http://www.springframework.org/schema/context/spring-context-3.0.xsd        http://www.springframework.org/schema/mvc   http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+dispatcher.xml,beans_mvc:resources_@mapping,/resources/**,/resources/**
+dispatcher.xml,beans_mvc:resources_@location,/resources/,/resources/
+dispatcher.xml,beans_mvc:annotation-driven,,
+dispatcher.xml,beans_context:component-scan_@base-package,org.kp.oppr.rxnotifier,org.kp.oppr.rxnotifier
+dispatcher.xml, beans_bean_@id,propertyConfigurer,propertyConfigurer
+dispatcher.xml, beans_bean_@class,org.springframework.beans.factory.config.PropertyPlaceholderConfigurer,org.springframework.beans.factory.config.PropertyPlaceholderConfigurer
+dispatcher.xml, beans_bean_property,{'@name': 'locations'| 'list': {'value': ['classpath:/ldap.properties'| 'classpath:/RxNotifierConfig.properties']}},{'@name': 'locations'| 'list': {'value': ['classpath:/ldap.properties'| 'classpath:/RxNotifierConfig.properties']}}
+dispatcher.xml, beans_bean_@id,messageSource,messageSource
+dispatcher.xml, beans_bean_@class,org.springframework.context.support.ResourceBundleMessageSource,org.springframework.context.support.ResourceBundleMessageSource
+dispatcher.xml, beans_bean_property,{'@name': 'basenames'| 'list': {'value': ['messages'| 'app.version.buildnumber']}},{'@name': 'basenames'| 'list': {'value': ['messages'| 'app.version.buildnumber']}}
+dispatcher.xml, beans_bean_@id,annotationMaper,annotationMaper
+dispatcher.xml, beans_bean_@class,org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping,org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping
+dispatcher.xml, beans_bean_property,{'@name': 'interceptors'| 'list': None},{'@name': 'interceptors'| 'list': None}
+dispatcher.xml, beans_bean_@class,org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter,org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter
+dispatcher.xml, beans_bean_@id,ldapHelperBean,ldapHelperBean
+dispatcher.xml, beans_bean_@class,org.kp.esb.ldap.LdapHelperV2,org.kp.esb.ldap.LdapHelperV2
+dispatcher.xml, beans_bean_constructor-arg,{'@index': '0'| '@value': '${ladp.url}'},{'@index': '0'| '@value': '${ladp.url}'}
+dispatcher.xml, beans_bean_@id,userValidator,userValidator
+dispatcher.xml, beans_bean_@class,org.kp.oppr.rxnotifier.validators.UserValidator,org.kp.oppr.rxnotifier.validators.UserValidator
+dispatcher.xml, beans_bean_property,[{'@name': 'initialContextFactory'| '@value': '${INITIAL_CONTEXT_FACTORY}'}| {'@name': 'securityAuthentication'| '@value': '${SECURITY_AUTHENTICATION}'}| {'@name': 'ldapURL'| '@value': '${ladp.url}'}| {'@name': 'ldapUserDN'| '@value': '${ldap.user.dn}'}| {'@name': 'ldapPassword'| '@value': '${ladp.user.password}'}| {'@name': 'appUserBaseDn'| '@value': '${ldap.app.user.base.dn}'}| {'@name': 'appUserFilterPrefix'| '@value': '${ldap.app.user.filter.prefix}'}| {'@name': 'corpUserBaseDn'| '@value': '${ldap.corp.user.base.dn}'}| {'@name': 'corpUserFilterPrefix'| '@value': '${ldap.corp.user.filter.prefix}'}| {'@name': 'sg1AdminGroup'| '@value': '${ldap.group.admin}'}| {'@name': 'sg1SupportGroup'| '@value': '${ldap.group.support}'}| {'@name': 'ldapHelper'| '@ref': 'ldapHelperBean'}],[{'@name': 'initialContextFactory'| '@value': '${INITIAL_CONTEXT_FACTORY}'}| {'@name': 'securityAuthentication'| '@value': '${SECURITY_AUTHENTICATION}'}| {'@name': 'ldapURL'| '@value': '${ladp.url}'}| {'@name': 'ldapUserDN'| '@value': '${ldap.user.dn}'}| {'@name': 'ldapPassword'| '@value': '${ladp.user.password}'}| {'@name': 'appUserBaseDn'| '@value': '${ldap.app.user.base.dn}'}| {'@name': 'appUserFilterPrefix'| '@value': '${ldap.app.user.filter.prefix}'}| {'@name': 'corpUserBaseDn'| '@value': '${ldap.corp.user.base.dn}'}| {'@name': 'corpUserFilterPrefix'| '@value': '${ldap.corp.user.filter.prefix}'}| {'@name': 'sg1AdminGroup'| '@value': '${ldap.group.admin}'}| {'@name': 'sg1SupportGroup'| '@value': '${ldap.group.support}'}| {'@name': 'ldapHelper'| '@ref': 'ldapHelperBean'}]
+dispatcher.xml, beans_bean_@id,viewResolver,viewResolver
+dispatcher.xml, beans_bean_@class,org.springframework.web.servlet.view.InternalResourceViewResolver,org.springframework.web.servlet.view.InternalResourceViewResolver
+dispatcher.xml, beans_bean_property,[{'@name': 'prefix'| '@value': '/WEB-INF/views/'}| {'@name': 'suffix'| '@value': '.jsp'}],[{'@name': 'prefix'| '@value': '/WEB-INF/views/'}| {'@name': 'suffix'| '@value': '.jsp'}]

@@ -25,7 +25,7 @@
   gather_facts: no
   vars:
     server1_config_tmp_dir: "{{ hostvars['localhost'].server1_config_temp_dir }}/"
-
+    server1_config_path: "/home/ubuntu/qa_config"
   tasks:
     - debug: var=server1_config_tmp_dir
 
@@ -47,7 +47,7 @@
   gather_facts: no
   vars:
     server2_config_tmp_dir: "{{ hostvars['localhost'].server2_config_temp_dir }}/"
-
+    server2_config_path: "/home/ubuntu/dev_config"
   tasks:
     - debug: var=server2_config_tmp_dir
 

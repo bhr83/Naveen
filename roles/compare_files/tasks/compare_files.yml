@@ -1,32 +1,26 @@
 - name: "convert xml to dict {{ conf_file_name }}"
   shell: "python3.8 {{role_path}}/files/xml_dict_convert.py {{ server1_config_temp_dir }}/{{ conf_file_name }}"
-  register: config1
+  register: config_1
 
-- debug: var=config1.stdout
+- name: server1 config_file dict 
+  debug: var=config_1.stdout
 
 - name: "convert xml to dict {{ conf_file_name }}"
   shell: "python3.8 {{role_path}}/files/xml_dict_convert.py {{ server2_config_temp_dir }}/{{ conf_file_name }}"
-  register: config2
+  register: config_2
 
-- debug: var=config2.stdout
-
-- set_fact:
-    config1_dict: "{{ config1.stdout | from_json }}" 
+- name: server2 config_file dict
+  debug: var=config_2.stdout
 
 - set_fact:
-    config2_dict: "{{ config2.stdout | from_json }}" 
+    config1_dict: "{{ config_1.stdout | from_json }}" 
 
 - set_fact:
-      csv_header: 'key,file1,file2'
-
-- name: write header to csv file
-  copy:
-    content: "{{ csv_header }}"
-    dest: output.csv
+    config2_dict: "{{ config_2.stdout | from_json }}" 
 
 - name: write content to csv row
   vars:
-    csv_row: "{{config1.key}},{{config1.value}},{{config2_dict[config1.key] | d()}}"
+    csv_row: "{{conf_file_name}},{{config1.key}},{{config1.value}},{{config2_dict[config1.key] | d()}}"
   lineinfile:
     line: "{{ csv_row }}"
     dest: output.csv
@@ -37,8 +31,8 @@
 
 - name: write content to csv row for list of values
   vars:
-    tag_key: "{{config1.key}}"
-    tag_value: "{{config1.value}}"
+    config1_tag_key: "{{config1.key}}"
+    config1_tag_value_list_of_dicts: "{{config1.value}}"
     search_in_dict: "{{ config2_dict }}"
   include_tasks: appening_list_values.yml
   with_dict: "{{ config1_dict }}" 

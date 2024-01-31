@@ -2,8 +2,22 @@
   shell: "ls {{ server1_config_temp_dir }}"
   register: server1_configs
 
+- set_fact:
+    csv_header: 'config_file,key,file1,file2'
+
+- name: write header to csv file
+  copy:
+    content: "{{ csv_header }}"
+    dest: output.csv
+
 - name: include compare_files.yml
   include_tasks: compare_files.yml
   loop: "{{ server1_configs.stdout_lines }}"
   loop_control:
     loop_var: conf_file_name
+
+- shell: cat output.csv
+  register: csv_output
+
+- debug: var=csv_output
+       
