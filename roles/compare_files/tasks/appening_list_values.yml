@@ -1,0 +1,6 @@
+- include_tasks: adding_each_value.yml
+  vars:
+    config_dict: "{{ conf_value }}"
+  loop: "{{ tag_value }}"
+  loop_control:
+    loop_var: conf_value

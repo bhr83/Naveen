@@ -7,10 +7,21 @@
     ANSIBLE_DISPLAY_SKIPPED_HOSTS: "False"
 
   tasks:        
+    - name: create temp file
+      tempfile:
+        state:  file
+        prefix: compare_results
+      register: temp_config
+
+    - name: set tempfile path
+      set_fact:
+        tmp_file: "{{ temp_config.path }}"
+          
+    - debug: var=tmp_file
     - name: Find .properties files
       find:
         paths: C:/cygwin64/home/bindu/playbooks/naveen/prod
-        patterns: "*.properties"
+        patterns: "*.*"
         recurse: yes
       register: prop_files
 
@@ -20,5 +31,11 @@
         file_src_path: "{{ item }}"
       include_tasks: compare.yml
       loop: "{{ prop_files.files | map(attribute='path') | list }}"
+
+    - shell: "cat {{ tmp_file }}"
+      register: compare_content
+
+    - debug: 
+        msg: "{{ compare_content.stdout_lines }}"
       
    

@@ -1,0 +1,41 @@
+---
+
+- hosts: localhost
+  gather_facts: no
+
+  tasks:
+    - name: create src temp file
+      tempfile:
+        state: directory
+      register: src_config
+
+    - name: set src tempfile path
+      set_fact:
+        src_file: "{{ src_config.path }}"
+
+- hosts: "{{ server1 }}"
+  gather_facts: no
+  vars:
+    src_file1: "{{ hostvars['localhost'].src_file }}/"
+  tasks:
+    - debug: var=src_file1
+
+    - name: fetch content of src directory
+      find:
+        paths: /home/ubuntu/config
+        recurse: yes
+      register: src_files
+
+    - name: fetch files from the remote directory
+      fetch:
+        src: "{{ item.path }}"
+        dest: "{{ src_file1 }}"
+        flat: yes
+      with_items: "{{ src_files.files }}"
+
+- hosts: localhost
+  
+  tasks:
+    - shell: "ls {{src_file}}"
+      register: files
+    - debug: var=files

@@ -1,0 +1,32 @@
+- name: Convert dictionary to key-value pairs list
+  set_fact:
+    dict_items: "{{ config_dict | dict2items }}"
+
+- name: Get the first key-value pair
+  set_fact:
+    first_key_value_pair: "{{ dict_items | first }}"
+
+- debug: var=first_key_value_pair
+- name: debug tag key
+  debug:
+    msg: "{{ tag_key }}"
+- debug: 
+    msg: "{{ search_in_dict[tag_key] }}"
+
+- name: Find dictionary by key match
+  set_fact:
+    matching_dict: "{{ search_in_dict[tag_key] | selectattr(first_key_value_pair['key'], 'equalto', first_key_value_pair['value']) | first | d({}) }}"
+
+- name: Display the matching dictionary
+  debug:
+    var: matching_dict
+
+- name: write content to csv row
+  vars:
+    csv_row: "{{tag_key}}_{{file1config.key}},{{file1config.value}},{{matching_dict[file1config.key] | d()}}"
+  lineinfile:
+    line: "{{ csv_row }}"
+    dest: output.csv
+  with_dict: "{{ config_dict }}" 
+  loop_control:
+    loop_var: file1config

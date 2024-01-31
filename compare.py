@@ -11,5 +11,6 @@ with open(destfile) as dest_file:
 # Find and print the diff:
 for line in difflib.unified_diff(
         src_file_text, dest_file_text, fromfile=srcfile, 
-        tofile=destfile, lineterm=''):
-    print(line)
+        tofile=destfile, lineterm=''):  
+    if (line.startswith("-") or line.startswith("+")) and not line.startswith(" "):
+        print(line)

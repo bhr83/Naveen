@@ -1,0 +1,47 @@
+- name: "convert xml to dict {{ conf_file_name }}"
+  shell: "python3.8 {{role_path}}/files/xml_dict_convert.py {{ server1_config_temp_dir }}/{{ conf_file_name }}"
+  register: config1
+
+- debug: var=config1.stdout
+
+- name: "convert xml to dict {{ conf_file_name }}"
+  shell: "python3.8 {{role_path}}/files/xml_dict_convert.py {{ server2_config_temp_dir }}/{{ conf_file_name }}"
+  register: config2
+
+- debug: var=config2.stdout
+
+- set_fact:
+    config1_dict: "{{ config1.stdout | from_json }}" 
+
+- set_fact:
+    config2_dict: "{{ config2.stdout | from_json }}" 
+
+- set_fact:
+      csv_header: 'key,file1,file2'
+
+- name: write header to csv file
+  copy:
+    content: "{{ csv_header }}"
+    dest: output.csv
+
+- name: write content to csv row
+  vars:
+    csv_row: "{{config1.key}},{{config1.value}},{{config2_dict[config1.key] | d()}}"
+  lineinfile:
+    line: "{{ csv_row }}"
+    dest: output.csv
+  with_dict: "{{ config1_dict }}" 
+  loop_control:
+    loop_var: config1
+  when: config1.value | type_debug != 'list'  
+
+- name: write content to csv row for list of values
+  vars:
+    tag_key: "{{config1.key}}"
+    tag_value: "{{config1.value}}"
+    search_in_dict: "{{ config2_dict }}"
+  include_tasks: appening_list_values.yml
+  with_dict: "{{ config1_dict }}" 
+  loop_control:
+    loop_var: config1
+  when: config1.value | type_debug == 'list'

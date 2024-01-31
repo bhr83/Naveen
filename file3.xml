@@ -1,0 +1,318 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:util="http://www.springframework.org/schema/util"  xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans     
+        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd
+		http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
+
+	 <mvc:annotation-driven /> 
+
+	<import resource="dispatcher-servlet.xml" />
+	<aop:aspectj-autoproxy />
+	<cache:annotation-driven />
+	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+		<property name="cacheManager" ref="ehcache" />
+	</bean>
+	<bean id="ehcache"
+		class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+		<property name="configLocation" value="classpath:ehcache.xml" />
+	</bean>
+
+	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+        <property name="jndiName" value="jdbc/opprRxNotifier"/>
+        <property name="lookupOnStartup" value="false"/>
+        <property name="cache" value="true" />
+        <property name="proxyInterface"  value="javax.sql.DataSource" />
+    </bean>
+    
+	<!-- <bean id="dataSource"
+		class="org.springframework.jndi.JndiObjectFactoryBean">
+
+		<property name="jndiName" value="jdbc/RxNotifierDB" />
+		<property name="lookupOnStartup" value="false" />
+		<property name="cache" value="true" />
+		<property name="proxyInterface" value="javax.sql.DataSource" />
+	</bean> -->
+	
+	<bean id="namedParameterJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">  
+   		<!--<property name="dataSource" ref="dataSource">  </property>
+   		--><constructor-arg ref="dataSource" /> 
+    </bean>
+    
+    <bean id="restMsgProcessor" class="org.kp.oppr.rxnotifier.restService.RestMsgProcessor" /> 
+
+	<bean id="basicAuthInterceptor" class="org.kp.oppr.rxnotifier.security.BasicAuthInterceptor" >
+		<property name="authorization" value="${rxnotifier.UI.restservice.authorization}" />
+	</bean>
+
+	<bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
+		<property name="messageConverters">
+			<list>
+				<bean
+					class="org.springframework.http.converter.StringHttpMessageConverter" />
+			</list>
+		</property>
+		<property name="interceptors">
+			<list>
+				<ref bean="basicAuthInterceptor" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="rxNotifierSessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mappingDirectoryLocations">
+			<list>
+				<value>classpath:org/kp/oppr/rxnotifier/hibernate</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</prop>
+				<prop key="hibernate.default_schema">RXNOTIFIER1</prop>
+				 <prop key="hibernate.jdbc.use_get_generated_keys">true</prop>
+			</props>
+		</property>
+	</bean>
+
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <bean id="transactionManager"
+          class="org.springframework.orm.hibernate4.HibernateTransactionManager"
+          lazy-init="false">       
+        <property name="sessionFactory" ref="rxNotifierSessionFactory" />
+    </bean>
+	
+	<!-- DAO Beans -->
+
+	<bean id="rxAlertsDAO" class="org.kp.oppr.rxnotifier.dao.RxAlrtsDAOImpl">
+		<property name="sessionFactory" ref="rxNotifierSessionFactory">
+
+		</property>
+	</bean>
+
+	<bean id="rgnMstrDAO" class="org.kp.oppr.rxnotifier.dao.RgnMstrDAOImpl">
+		<property name="sessionFactory" ref="rxNotifierSessionFactory">
+
+		</property>
+	</bean>
+
+	<bean id="rxAlrtsPhrmcyMstrDAO" class="org.kp.oppr.rxnotifier.dao.RxAlrtsPhrmcyMstrDAOImpl">
+		<property name="sessionFactory" ref="rxNotifierSessionFactory">
+
+		</property>
+	</bean>
+	
+	<bean id="rxAlrtsServAreaMstrDAO" class="org.kp.oppr.rxnotifier.dao.RxAlrtsServAreaMstrDAOImpl">
+		<property name="sessionFactory" ref="rxNotifierSessionFactory">
+
+		</property>
+	</bean>
+	
+	<bean id="rxAlrtsUsrAssgndPhrmcyDAO" class="org.kp.oppr.rxnotifier.dao.RxAlrtsUsrAssgndPhrmcyDAOImpl">
+		<property name="sessionFactory" ref="rxNotifierSessionFactory">
+
+		</property>
+	</bean>
+
+    <bean id="rxAlrtsAuditDAO" class="org.kp.oppr.rxnotifier.dao.RxAlrtsAuditDAOImpl">
+		<property name="sessionFactory" ref="rxNotifierSessionFactory">
+
+		</property>
+	</bean>
+	
+	 <bean id="rxAlrtsReportDAO" class="org.kp.oppr.rxnotifier.dao.RxAlrtsReportDAOImpl">		
+	</bean>
+	
+
+	<!-- Service Beans -->
+	<bean id="rxAlertsService" class="org.kp.oppr.rxnotifier.services.RxAlertsServiceImpl">
+
+	</bean>
+	
+	<bean id="rxAlrtsServAreaMstrService" class="org.kp.oppr.rxnotifier.services.RxAlrtsServAreaMstrServiceImpl">
+
+	</bean>
+	
+	<bean id="usrAssgndPhrmcyService" class="org.kp.oppr.rxnotifier.services.RxAlrtsUsrAssgndPhrmcyServiceImpl">
+
+	</bean>
+
+	<bean id="rgnMstrService" class="org.kp.oppr.rxnotifier.services.RgnMstrServiceImpl">
+	</bean>
+
+	<bean id="smsService" class="org.kp.oppr.rxnotifier.services.SMSServiceImpl">
+	</bean>
+
+	<bean id="rxAlrtsPhrmcyMstrService"
+		class="org.kp.oppr.rxnotifier.services.RxAlrtsPhrmcyMstrServiceImpl">
+	</bean>
+   <bean id="rxAlertsReportsService" class="org.kp.oppr.rxnotifier.services.RxAlertsReportsServiceImpl">
+
+	</bean>
+
+
+
+	<util:map id="regionsMap" map-class="java.util.HashMap">
+		<entry key="01" value="SCA" />
+		<entry key="02" value="NCA" />
+		<entry key="03" value="NW" />
+		<entry key="04" value="GA" />
+		<entry key="05" value="HI" />
+		<entry key="06" value="CO" />
+		<entry key="07" value="MAS" />
+		<entry key="08" value="OH" />
+	</util:map>
+
+	<util:map id="regionsMRNPrefixMap" map-class="java.util.HashMap">
+		<entry key="SCA" value="00" />
+		<entry key="NCA" value="11" />
+	</util:map>
+	
+	<!-- SMSGateway Configurations Start -->
+	
+	<bean id="smsGateway" class="org.kp.oppr.sms.service.impl.SMSGatewayImpl">
+		<property name="smsNotificationUrl" value="${sms.notification.url}" />
+		<property name="eventType" value="Rx-NOTIFIER" />
+		<property name="eventCategory" value="PHARMACY" />
+		<property name="phoneIdType" value="PHONENO" />
+		<property name="eventSource" value="Pharmacy" />
+		<property name="assigningOrgCodeMap" ref="assigningOrgCodeMap"></property>
+		<property name="regionMap" ref="regionMap"></property>
+		<property name="attributeMap" ref="attributeMap"></property>
+	</bean>
+
+	<bean id="notificationServiceClient"
+		class="org.kp.oppr.sms.notification.client.NotificationServiceClient">
+		<property name="notificationWebServiceTemplate">
+			<ref bean="notificationServiceTemplate" />
+		</property>
+	</bean>
+
+	<bean id="wsSecurityHeaderData" class="org.kp.oppr.sms.ws.security.SecurityHeaderData">
+		<property name="encSecurementUsername" value="${sms.notification.username}" />
+		<property name="encSecurementPassword" value="${sms.notification.password}" />
+		<property name="securementPasswordType" value="PasswordText" />
+		<property name="securementUsernameTokenElements" value="None Created" />
+		<property name="securementMustUnderstand" value="false" />
+	</bean>
+
+	<bean id="clientInterceptor" scope="prototype"
+		class="org.kp.oppr.sms.ws.security.SecurityInterceptor">
+		<property name="performSecurementActions" value="UsernameToken" />
+		<property name="securementActions" value="UsernameToken" />
+		<property name="securityHeaderData" ref="wsSecurityHeaderData" />
+	</bean>
+
+	<bean id="notificationServiceInterceptor"
+		class="org.kp.oppr.sms.notification.client.NotificationServiceInterceptor"
+		scope="prototype" />
+
+	<bean id="notificationServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate">
+		<property name="interceptors">
+			<list>
+				<ref bean="clientInterceptor" />
+				<ref bean="notificationServiceInterceptor" />
+			</list>
+		</property>
+		<constructor-arg ref="messageFactory" />
+		<property name="marshaller" ref="notificationservicemarshaller" />
+		<property name="unmarshaller" ref="notificationservicemarshaller" />
+	</bean>
+
+	<bean id="notificationservicemarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller"
+		p:contextPath="org.kp.svc.schemas.care_deliv_sprt.com_mgmt.v1.notificationservice" />
+
+	<bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory" />
+
+	<util:map id="assigningOrgCodeMap" map-class="java.util.HashMap">
+		<entry key="SCA" value="KP_SCA" />
+		<entry key="NCA" value="KP_NCA" />
+		<entry key="NW" value="KP_NW" />
+		<entry key="GA" value="KP_GA" />
+		<entry key="HI" value="KP_HI" />
+		<entry key="CO" value="KP_CO" />
+		<entry key="MA" value="KP_MAS" />
+	</util:map>
+	<util:map id="regionMap" map-class="java.util.HashMap">
+		<entry key="SCA" value="SCA" />
+		<entry key="NCA" value="MRN" />
+		<entry key="NW" value="KNW" />
+		<entry key="GA" value="GGA" />
+		<entry key="HI" value="HAW" />
+		<entry key="CO" value="COL" />
+		<entry key="MA" value="MID" />
+	</util:map>
+	<util:map id="attributeMap" map-class="java.util.HashMap">
+		<entry key="ComChannel.sms" value="PHONENO" />
+		<entry key="Pref.override" value="ComChannel.sms" />
+		<entry key="ComChannel.sms.stop.override" value="true" />
+	</util:map>
+
+	<!-- SMSGateway Configurations End EPR Client Service to get patient Info 
+		Start -->
+
+	<bean id="eprClient" class="org.kp.oppr.epr.service.impl.EPRClientImpl">
+		<property name="eprWebserviceUrl" value="${epr.service.url}" />
+		
+	</bean>
+
+	<bean id="eprServiceClient" class="org.kp.oppr.epr.selectpatient.client.EPRServiceClient">
+		<property name="eprWebServiceTemplate">
+			<ref bean="eprServiceTemplate" />
+		</property>
+	</bean>
+
+	<bean id="eprwsSecurityHeaderData" class="org.kp.oppr.epr.ws.security.SecurityHeaderData">
+		<property name="encSecurementUsername" value="${epr.service.username}" />
+		<property name="encSecurementPassword" value="${epr.service.password}" />
+		<property name="securementPasswordType" value="PasswordText" />
+		<property name="securementUsernameTokenElements" value="None Created" />
+		<property name="securementMustUnderstand" value="false" />
+	</bean>
+
+	<bean id="eprclientInterceptor" scope="prototype"
+		class="org.kp.oppr.epr.ws.security.SecurityInterceptor">
+		<property name="performSecurementActions" value="UsernameToken" />
+		<property name="securementActions" value="UsernameToken" />
+		<property name="securityHeaderData" ref="eprwsSecurityHeaderData" />
+	</bean>
+
+	<bean id="eprServiceInterceptor"
+		class="org.kp.oppr.epr.selectpatient.client.EPRServiceClientInterceptor"
+		scope="prototype" />
+
+	<bean id="eprServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate">
+		<property name="interceptors">
+			<list>
+				<ref bean="eprclientInterceptor" />
+				<ref bean="eprServiceInterceptor" />
+			</list>
+		</property>
+		<constructor-arg ref="messageFactory" />
+		<property name="marshaller" ref="eprservicemarshaller" />
+		<property name="unmarshaller" ref="eprservicemarshaller" />
+	</bean>
+
+	<bean id="eprservicemarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller"
+		p:contextPath="com.pdxinc.rxcomws.patientws.ecom.kp.v5" />
+
+	<!-- bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory" 
+		/ -->
+
+	<!-- EPR Client Service to get patient Info End -->
+
+ 
+</beans>

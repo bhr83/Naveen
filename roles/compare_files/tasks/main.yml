@@ -1,0 +1,9 @@
+- name: list files on server1
+  shell: "ls {{ server1_config_temp_dir }}"
+  register: server1_configs
+
+- name: include compare_files.yml
+  include_tasks: compare_files.yml
+  loop: "{{ server1_configs.stdout_lines }}"
+  loop_control:
+    loop_var: conf_file_name

@@ -1,0 +1,72 @@
+---
+- hosts: localhost
+  gather_facts: no
+
+  tasks:
+    - name: Create temp dir to copy server1 configs
+      tempfile:
+        state: directory
+      register: server1_config_dir
+
+    - name: Set server1 temp dir path
+      set_fact:
+        server1_config_temp_dir: "{{ server1_config_dir.path }}"
+
+    - name: Create temp dir to copy server2 configs
+      tempfile:
+        state: directory
+      register: server2_config_dir
+
+    - name: Set server2 temp dir path
+      set_fact:
+        server2_config_temp_dir: "{{ server2_config_dir.path }}"
+
+- hosts: "{{ server1 }}"
+  gather_facts: no
+  vars:
+    server1_config_tmp_dir: "{{ hostvars['localhost'].server1_config_temp_dir }}/"
+
+  tasks:
+    - debug: var=server1_config_tmp_dir
+
+    - name: find config files path from server1
+      find:
+        paths: /home/ubuntu/config
+        patterns: "*.xml"
+        recurse: yes
+      register: server1_files
+
+    - name: fetch files from the remote directory from server1
+      fetch:
+        src: "{{ item.path }}"
+        dest: "{{ server1_config_tmp_dir }}"
+        flat: yes
+      loop: "{{ server1_files.files }}"
+
+- hosts: "{{ server2 }}"
+  gather_facts: no
+  vars:
+    server2_config_tmp_dir: "{{ hostvars['localhost'].server2_config_temp_dir }}/"
+
+  tasks:
+    - debug: var=server2_config_tmp_dir
+
+    - name: find config files path from server2
+      find:
+        paths: /home/ubuntu/config
+        patterns: "*.xml"
+        recurse: yes
+      register: server2_files
+
+    - name: fetch files from the remote directory from server2
+      fetch:
+        src: "{{ item.path }}"
+        dest: "{{ server2_config_tmp_dir }}"
+        flat: yes
+      loop: "{{ server2_files.files }}"
+      
+- hosts: localhost
+  gather_facts: no
+
+  roles:
+    - compare_files

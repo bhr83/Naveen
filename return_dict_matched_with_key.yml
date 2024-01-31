@@ -1,0 +1,39 @@
+---
+- name: Find dictionary by key match
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Define the list of dictionaries
+      set_fact:
+        configuration_loggers_logger:
+          - "@name": "org.apache.log4j.xml"
+            "@level": "info"
+          - "@name": "org.kp.oppr"
+            "@level": "debug"
+            "@additivity": "false"
+            "AppenderRef":
+              "@ref": "rollingFile"
+          - "@name": "org.springframework"
+            "@level": "info"
+            "@additivity": "false"
+            "AppenderRef":
+              "@ref": "rollingFile"
+          - "@name": "org.springframework.context"
+            "@level": "info"
+            "@additivity": "false"
+            "AppenderRef":
+              "@ref": "rollingFile"
+          - "@name": "org.springframework.web"
+            "@level": "info"
+            "@additivity": "false"
+            "AppenderRef":
+              "@ref": "rollingFile"
+
+    - name: Find dictionary by key match
+      set_fact:
+        matching_dict: "{{ configuration_loggers_logger | selectattr('@name', 'equalto', 'org.apache.log4j.xml') | first }}"
+
+    - name: Display the matching dictionary
+      debug:
+        var: matching_dict
+
