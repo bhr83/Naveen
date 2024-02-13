@@ -1,0 +1,35 @@
+---
+- name: Find and print unique occurrences of log.xml
+  hosts: 192.168.62.7
+  gather_facts: no
+
+  tasks:
+
+    # - set_fact:
+    #     test: '""" hello how are ''you''"'
+
+    - name: Use find module to search for log.xml
+      find:
+        paths: "/home/ubuntu/config"
+        recurse: yes
+        patterns: "*.xml"
+      register: files_found
+
+    - set_fact:
+        config_files: "{{ files_found.files | map(attribute='path') | unique |  list}}"
+
+    - name: Display unique occurrences of log.xml
+      set_fact:
+        config_files_names: "{{ files_found.files | map(attribute='path') | map('basename') | unique |  list}}"
+
+    - set_fact:
+#        config_files_unique: "{{ config_files_unique | default([]) + config_files | select('in', item) | first | list }}"
+         #config_files_unique: "{{ config_files_unique | default([]) +  config_files | map('search', item) | list }}"
+         #config_files_unique: "{{ config_files_unique | default([]) +  config_files | map('regex_search', '^' + item ) | select('match', true) | list }}"
+         #config_files_unique: "{{ config_files_unique | default([]) + [item | regex_search('^' + item) | ternary(item, '') | default('')] }}"
+        #config_files_unique: "{{ config_files | select('equalto', 'test.xml')| list | first | default('')}}"
+        #config_files_unique: "{{ config_files | select('match', '^.*test\\.xml$') | list | first | default('') }}"
+        config_files_unique: "{{ config_files_unique | d([]) + [config_files | select('match', '^.*' + item + '$') | list | first | default('')] }}"
+      loop: "{{ config_files_names }}"
+
+    - debug: var=config_files_unique
