@@ -32,7 +32,7 @@
     - name: find config files path from server1
       find:
         paths: "{{ server1_config_path }}"
-        patterns: "*.xml"
+        patterns: "*.*"
         recurse: yes
       register: server1_files
 
@@ -54,7 +54,7 @@
     - name: find config files path from server2
       find:
         paths: "{{ server2_config_path }}"
-        patterns: "*.xml"
+        patterns: "*.*"
         recurse: yes
       register: server2_files
 

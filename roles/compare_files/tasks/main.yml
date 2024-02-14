@@ -10,11 +10,19 @@
     content: "{{ csv_header }}"
     dest: output.csv
 
-- name: include compare_files.yml
-  include_tasks: compare_files.yml
+- name: include compare_file.yml if file type is not xml
+  include_tasks: compare_file.yml
   loop: "{{ server1_configs.stdout_lines }}"
   loop_control:
     loop_var: conf_file_name
+  when: not conf_file_name.endswith('.xml')  
+
+# - name: include compare_xml.yml
+#   include_tasks: compare_xml.yml
+#   loop: "{{ server1_configs.stdout_lines }}"
+#   loop_control:
+#     loop_var: conf_file_name
+#   when: conf_file_name.endswith('.xml')
 
 - shell: cat output.csv
   register: csv_output

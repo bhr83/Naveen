@@ -18,7 +18,7 @@
 - set_fact:
     config2_dict: "{{ config_2.stdout | from_json }}" 
 
-- name: write content to csv row
+- name: write content to csv row {{ conf_file_name }}
   vars:
     csv_row: "{{conf_file_name}},{{config1.key}},{{config1.value}},{{config2_dict[config1.key] | d()}}"
   lineinfile:
@@ -29,7 +29,7 @@
     loop_var: config1
   when: config1.value | type_debug != 'list'  
 
-- name: write content to csv row for list of values
+- name: write content to csv row for list of values {{ conf_file_name }}
   vars:
     config1_tag_key: "{{config1.key}}"
     config1_tag_value_list_of_dicts: "{{config1.value}}"

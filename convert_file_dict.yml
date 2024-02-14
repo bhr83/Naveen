@@ -1,0 +1,21 @@
+---
+- hosts: localhost
+  gather_facts: no
+
+  tasks:
+    - name: "Read file content"
+      shell: "cat config | grep -v '^#' |  grep -v '^$'"
+      register: file1_content
+
+    - debug:
+        var: file1_content
+
+    - name: Convert stdout to dictionary
+      set_fact:
+        config_dict: "{{ config_dict | default({}) | combine({item.split('=', 1)[0]: item.split('=', 1)[1]}) }}"
+        #config_dict: "{{ config_dict | default({}) | combine({item.split('=')[0]: item.split('=')[1]}) }}"
+      loop: "{{ file1_content.stdout_lines }}"
+
+    - name: Display the resulting dictionary
+      debug:
+        var: config_dict

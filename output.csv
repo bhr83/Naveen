@@ -1,32 +1,65 @@
 config_file,key,file1,file2
-dispatcher.xml,beans_@xmlns,http://www.springframework.org/schema/beans,http://www.springframework.org/schema/beans
-dispatcher.xml,beans_@xmlns:mvc,http://www.springframework.org/schema/mvc,http://www.springframework.org/schema/mvc
-dispatcher.xml,beans_@xmlns:xsi,http://www.w3.org/2001/XMLSchema-instance,http://www.w3.org/2001/XMLSchema-instance
-dispatcher.xml,beans_@xmlns:p,http://www.springframework.org/schema/p,http://www.springframework.org/schema/p
-dispatcher.xml,beans_@xmlns:aop,http://www.springframework.org/schema/aop,http://www.springframework.org/schema/aop
-dispatcher.xml,beans_@xmlns:tx,http://www.springframework.org/schema/tx,http://www.springframework.org/schema/tx
-dispatcher.xml,beans_@xmlns:context,http://www.springframework.org/schema/context,http://www.springframework.org/schema/context
-dispatcher.xml,beans_@xsi:schemaLocation,http://www.springframework.org/schema/beans        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd        http://www.springframework.org/schema/context        http://www.springframework.org/schema/context/spring-context-3.0.xsd        http://www.springframework.org/schema/mvc   http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd,http://www.springframework.org/schema/beans        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd        http://www.springframework.org/schema/context        http://www.springframework.org/schema/context/spring-context-3.0.xsd        http://www.springframework.org/schema/mvc   http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
-dispatcher.xml,beans_mvc:resources_@mapping,/resources/**,/resources/**
-dispatcher.xml,beans_mvc:resources_@location,/resources/,/resources/
-dispatcher.xml,beans_mvc:annotation-driven,,
-dispatcher.xml,beans_context:component-scan_@base-package,org.kp.oppr.rxnotifier,org.kp.oppr.rxnotifier
-dispatcher.xml, beans_bean_@id,propertyConfigurer,propertyConfigurer
-dispatcher.xml, beans_bean_@class,org.springframework.beans.factory.config.PropertyPlaceholderConfigurer,org.springframework.beans.factory.config.PropertyPlaceholderConfigurer
-dispatcher.xml, beans_bean_property,{'@name': 'locations'| 'list': {'value': ['classpath:/ldap.properties'| 'classpath:/RxNotifierConfig.properties']}},{'@name': 'locations'| 'list': {'value': ['classpath:/ldap.properties'| 'classpath:/RxNotifierConfig.properties']}}
-dispatcher.xml, beans_bean_@id,messageSource,messageSource
-dispatcher.xml, beans_bean_@class,org.springframework.context.support.ResourceBundleMessageSource,org.springframework.context.support.ResourceBundleMessageSource
-dispatcher.xml, beans_bean_property,{'@name': 'basenames'| 'list': {'value': ['messages'| 'app.version.buildnumber']}},{'@name': 'basenames'| 'list': {'value': ['messages'| 'app.version.buildnumber']}}
-dispatcher.xml, beans_bean_@id,annotationMaper,annotationMaper
-dispatcher.xml, beans_bean_@class,org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping,org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping
-dispatcher.xml, beans_bean_property,{'@name': 'interceptors'| 'list': None},{'@name': 'interceptors'| 'list': None}
-dispatcher.xml, beans_bean_@class,org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter,org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter
-dispatcher.xml, beans_bean_@id,ldapHelperBean,ldapHelperBean
-dispatcher.xml, beans_bean_@class,org.kp.esb.ldap.LdapHelperV2,org.kp.esb.ldap.LdapHelperV2
-dispatcher.xml, beans_bean_constructor-arg,{'@index': '0'| '@value': '${ladp.url}'},{'@index': '0'| '@value': '${ladp.url}'}
-dispatcher.xml, beans_bean_@id,userValidator,userValidator
-dispatcher.xml, beans_bean_@class,org.kp.oppr.rxnotifier.validators.UserValidator,org.kp.oppr.rxnotifier.validators.UserValidator
-dispatcher.xml, beans_bean_property,[{'@name': 'initialContextFactory'| '@value': '${INITIAL_CONTEXT_FACTORY}'}| {'@name': 'securityAuthentication'| '@value': '${SECURITY_AUTHENTICATION}'}| {'@name': 'ldapURL'| '@value': '${ladp.url}'}| {'@name': 'ldapUserDN'| '@value': '${ldap.user.dn}'}| {'@name': 'ldapPassword'| '@value': '${ladp.user.password}'}| {'@name': 'appUserBaseDn'| '@value': '${ldap.app.user.base.dn}'}| {'@name': 'appUserFilterPrefix'| '@value': '${ldap.app.user.filter.prefix}'}| {'@name': 'corpUserBaseDn'| '@value': '${ldap.corp.user.base.dn}'}| {'@name': 'corpUserFilterPrefix'| '@value': '${ldap.corp.user.filter.prefix}'}| {'@name': 'sg1AdminGroup'| '@value': '${ldap.group.admin}'}| {'@name': 'sg1SupportGroup'| '@value': '${ldap.group.support}'}| {'@name': 'ldapHelper'| '@ref': 'ldapHelperBean'}],[{'@name': 'initialContextFactory'| '@value': '${INITIAL_CONTEXT_FACTORY}'}| {'@name': 'securityAuthentication'| '@value': '${SECURITY_AUTHENTICATION}'}| {'@name': 'ldapURL'| '@value': '${ladp.url}'}| {'@name': 'ldapUserDN'| '@value': '${ldap.user.dn}'}| {'@name': 'ldapPassword'| '@value': '${ladp.user.password}'}| {'@name': 'appUserBaseDn'| '@value': '${ldap.app.user.base.dn}'}| {'@name': 'appUserFilterPrefix'| '@value': '${ldap.app.user.filter.prefix}'}| {'@name': 'corpUserBaseDn'| '@value': '${ldap.corp.user.base.dn}'}| {'@name': 'corpUserFilterPrefix'| '@value': '${ldap.corp.user.filter.prefix}'}| {'@name': 'sg1AdminGroup'| '@value': '${ldap.group.admin}'}| {'@name': 'sg1SupportGroup'| '@value': '${ldap.group.support}'}| {'@name': 'ldapHelper'| '@ref': 'ldapHelperBean'}]
-dispatcher.xml, beans_bean_@id,viewResolver,viewResolver
-dispatcher.xml, beans_bean_@class,org.springframework.web.servlet.view.InternalResourceViewResolver,org.springframework.web.servlet.view.InternalResourceViewResolver
-dispatcher.xml, beans_bean_property,[{'@name': 'prefix'| '@value': '/WEB-INF/views/'}| {'@name': 'suffix'| '@value': '.jsp'}],[{'@name': 'prefix'| '@value': '/WEB-INF/views/'}| {'@name': 'suffix'| '@value': '.jsp'}]
+message.prop,login.invalid,Invalid Username or Password. Please try again.,Invalid Username or Password. Please try again.
+message.prop,login.session.timeout,User session timed out due to inactivity. Please login again.,User session timed out due to inactivity. Please login again.
+message.prop,error.login.user.required,Username is required.,Username is required.
+message.prop,error.login.password.required,Password is required.,Password is required.
+message.prop,error.login.invalid.login,Invalid Username or Password.,Invalid Username or Password.
+message.prop,error.login.invalid.authorization,User is not authorized to access this application.,User is not authorized to access this application.
+message.prop,error.login.UsrPhamacy.notFound,User is not associated to any pharmacy.,User is not associated to any pharmacy.
+message.prop,error.login.invalid.disabled,User account is disabled.,User account is disabled.
+message.prop,error.login.invalid.change.password,Your password has expired.,Your password has expired.
+message.prop,error.login.invalid.deactivated,User account is deactivated.,User account is deactivated.
+message.prop,error.login.invalid.change.password.admin,Your password has been changed by a system administrator. Please select the Reset Password link to create a new password.,Your password has been changed by a system administrator. Please select the Reset Password link to create a new password.
+message.prop,disclaimer.text,WARNING: THIS PRIVATE COMPUTER SYSTEM MAY BE USED ONLY BY AUTHORIZED USERS FOR AUTHORIZED BUSINESS PURPOSES. USE OF THIS SYSTEM IS MONITORED. BY LOGGING ON TO THIS SYSTEM YOU CONSENT TO SUCH MONITORING. EVIDENCE OF ANY IMPROPER ACCESS OR USE MAY BE PROVIDED TO LAW ENFORCEMENT OFFICIALS AND/OR COMPANY MANAGEMENT.� INDIVIDUALS ARE SUBJECT TO PROSECUTION AND/OR DISCIPLINARY ACTION, INCLUDING TERMINATION OF EMPLOYMENT, FOR IMPROPER ACCESS TO OR USE OF THE SYSTEM. ,WARNING: THIS PRIVATE COMPUTER SYSTEM MAY BE USED ONLY BY AUTHORIZED USERS FOR AUTHORIZED BUSINESS PURPOSES. USE OF THIS SYSTEM IS MONITORED. BY LOGGING ON TO THIS SYSTEM YOU CONSENT TO SUCH MONITORING. EVIDENCE OF ANY IMPROPER ACCESS OR USE MAY BE PROVIDED TO LAW ENFORCEMENT OFFICIALS AND/OR COMPANY MANAGEMENT.� INDIVIDUALS ARE SUBJECT TO PROSECUTION AND/OR DISCIPLINARY ACTION, INCLUDING TERMINATION OF EMPLOYMENT, FOR IMPROPER ACCESS TO OR USE OF THE SYSTEM. 
+message.prop,reset.password.url,https://idm-uat.kp.org/kpidm/welcome.do,https://idm-uat.kp.org/kpidm/welcome.do
+message.prop,select.pharmacy.title,Select Pharmacy,Select Pharmacy
+message.prop,schedule.alert.title,Schedule Alert,Schedule Alert
+message.prop,error.page.title,Error Page,Error Page
+message.prop,schedule.alert.description,Please enter member information to schedule an alert. All fields are required.,Please enter member information to schedule an alert. All fields are required.
+message.prop,select.pharmacy.description,Please select a pharmacy name to continue.,Please select a pharmacy name to continue.
+message.prop,select.pharmacy.names,Found {0} pharmacies.,Found {0} pharmacies.
+message.prop,alert.successfully.scheduled,An alert has been scheduled  for MRN: {0},An alert has been scheduled  for MRN: {0}
+message.prop,alert.updated.and.scheduled,An alert has been updated and scheduled for MRN: {0},An alert has been updated and scheduled for MRN: {0}
+message.prop,alert.new.record,An alert for MRN: {0} does not exist. To schedule a new alert fill in the member details.,An alert for MRN: {0} does not exist. To schedule a new alert fill in the member details.
+message.prop,alert.existing.record,An alert for MRN: {0} already exists.,An alert for MRN: {0} already exists.
+message.prop,alert.already.exists,An alert for MRN: {0} already exists and was scheduled on {1},An alert for MRN: {0} already exists and was scheduled on {1}
+message.prop,alert.successfully.deleted,An alert for MRN: {0} has been successfully deleted.,An alert for MRN: {0} has been successfully deleted.
+message.prop,system.error,A system error has occurred. Please retry and contact App Support if the problem persists.,A system error has occurred. Please retry and contact App Support if the problem persists.
+rxnoti.properties,login.invalid,Invalid Username or Password. Please try again.,Invalid Username or Password. Please try again.
+rxnoti.properties,login.session.timeout,User session timed out due to inactivity. Please login again.,User session timed out due to inactivity. Please login again.
+rxnoti.properties,error.login.user.required,Username is required.,Username is required.
+rxnoti.properties,error.login.password.required,Password is required.,Password is required.
+rxnoti.properties,error.login.invalid.login,Invalid Username or Password.,Invalid Username or Password.
+rxnoti.properties,error.login.invalid.authorization,User is not authorized to access this application.,User is not authorized to access this application.
+rxnoti.properties,error.login.UsrPhamacy.notFound,User is not associated to any pharmacy.,User is not associated to any pharmacy.
+rxnoti.properties,error.login.invalid.disabled,User account is disabled.,User account is disabled.
+rxnoti.properties,error.login.invalid.change.password,Your password has expired.,Your password has expired.
+rxnoti.properties,error.login.invalid.deactivated,User account is deactivated.,User account is deactivated.
+rxnoti.properties,error.login.invalid.change.password.admin,Your password has been changed by a system administrator. Please select the Reset Password link to create a new password.,Your password has been changed by a system administrator. Please select the Reset Password link to create a new password.
+rxnoti.properties,disclaimer.text,WARNING: THIS PRIVATE COMPUTER SYSTEM MAY BE USED ONLY BY AUTHORIZED USERS FOR AUTHORIZED BUSINESS PURPOSES. USE OF THIS SYSTEM IS MONITORED. BY LOGGING ON TO THIS SYSTEM YOU CONSENT TO SUCH MONITORING. EVIDENCE OF ANY IMPROPER ACCESS OR USE MAY BE PROVIDED TO LAW ENFORCEMENT OFFICIALS AND/OR COMPANY MANAGEMENT.� INDIVIDUALS ARE SUBJECT TO PROSECUTION AND/OR DISCIPLINARY ACTION, INCLUDING TERMINATION OF EMPLOYMENT, FOR IMPROPER ACCESS TO OR USE OF THE SYSTEM. ,WARNING: THIS PRIVATE COMPUTER SYSTEM MAY BE USED ONLY BY AUTHORIZED USERS FOR AUTHORIZED BUSINESS PURPOSES. USE OF THIS SYSTEM IS MONITORED. BY LOGGING ON TO THIS SYSTEM YOU CONSENT TO SUCH MONITORING. EVIDENCE OF ANY IMPROPER ACCESS OR USE MAY BE PROVIDED TO LAW ENFORCEMENT OFFICIALS AND/OR COMPANY MANAGEMENT.� INDIVIDUALS ARE SUBJECT TO PROSECUTION AND/OR DISCIPLINARY ACTION, INCLUDING TERMINATION OF EMPLOYMENT, FOR IMPROPER ACCESS TO OR USE OF THE SYSTEM. 
+rxnoti.properties,reset.password.url,https://idm-uat.kp.org/kpidm/welcome.do,https://idm-uat.kp.org/kpidm/welcome.do
+rxnoti.properties,select.pharmacy.title,Select Pharmacy,Select Pharmacy
+rxnoti.properties,schedule.alert.title,Schedule Alert,Schedule Alert
+rxnoti.properties,error.page.title,Error Page,Error Page
+rxnoti.properties,schedule.alert.description,Please enter member information to schedule an alert. All fields are required.,Please enter member information to schedule an alert. All fields are required.
+rxnoti.properties,select.pharmacy.description,Please select a pharmacy name to continue.,Please select a pharmacy name to continue.
+rxnoti.properties,select.pharmacy.names,Found {0} pharmacies.,Found {0} pharmacies.
+rxnoti.properties,alert.successfully.scheduled,An alert has been scheduled  for MRN: {0},An alert has been scheduled  for MRN: {0}
+rxnoti.properties,alert.updated.and.scheduled,An alert has been updated and scheduled for MRN: {0},An alert has been updated and scheduled for MRN: {0}
+rxnoti.properties,alert.new.record,An alert for MRN: {0} does not exist. To schedule a new alert fill in the member details.,An alert for MRN: {0} does not exist. To schedule a new alert fill in the member details.
+rxnoti.properties,alert.existing.record,An alert for MRN: {0} already exists.,An alert for MRN: {0} already exists.
+rxnoti.properties,alert.already.exists,An alert for MRN: {0} already exists and was scheduled on {1},An alert for MRN: {0} already exists and was scheduled on {1}
+rxnoti.properties,alert.successfully.deleted,An alert for MRN: {0} has been successfully deleted.,An alert for MRN: {0} has been successfully deleted.
+rxnoti.properties,system.error,A system error has occurred. Please retry and contact App Support if the problem persists.,A system error has occurred. Please retry and contact App Support if the problem persists.
+rxnoti.properties,CHANGE_PASSWORD,https://idm.kp.org/kpidm/welcome.do,https://idm.kp.org/kpidm/welcome.do
+rxnoti.properties,MEMBER_PREFERENCES_DISPLAY,Y,Y
+rxnoti.properties,sms.notification.url,https://service-bus-qa.kp.org/service/care_deliv_sprt/com_mgmt/v1/KPORG/NotificationPlatformEventService?ESB-ENVLBL=HREG2,https://service-bus-qa.kp.org/service/care_deliv_sprt/com_mgmt/v1/KPORG/NotificationPlatformEventService?ESB-ENVLBL=HREG2
+rxnoti.properties,sms.notification.username,S1MxMDA3Nw==,S1MxMDA3Nw==
+rxnoti.properties,sms.notification.password,MHBwJGMhdA==,MHBwJGMhdA==
+rxnoti.properties,member.manage.preference.url,https://service-bus-qa-05.kp.org:2008/service/diag_thrpy/pharm/CDADS/MemberPrefNotification/v1,https://service-bus-qa-05.kp.org:2008/service/diag_thrpy/pharm/CDADS/MemberPrefNotification/v1
+rxnoti.properties,ui.app.id,43,43
+rxnoti.properties,rxnotifier.UI.restservice.authorization,S1MxMDA3NzowcHAkYyF0,S1MxMDA3NzowcHAkYyF0
+rxnoti.properties,sms.intro.msg,You have been enrolled to receive a text message when your Kaiser Pharmacy prescription is ready to pick up. Msg & data rates may apply. Reply STOP to stop receiving Kaiser Pharmacy prescription pickup text messages.,You have been enrolled to receive a text message when your Kaiser Pharmacy prescription is ready to pick up. Msg & data rates may apply. Reply STOP to stop receiving Kaiser Pharmacy prescription pickup text messages.
+rxnoti.properties,epr.service.url, https://service-bus-dev.kp.org/service/diag_thrpy/phrmcy/epr/EcomPatientService/v4.1?esb-envlbl=qa1, https://service-bus-dev.kp.org/service/diag_thrpy/phrmcy/epr/EcomPatientService/v4.1?esb-envlbl=qa1
+rxnoti.properties,epr.service.username,S1MxMDA3Nw==,S1MxMDA3Nw==
+rxnoti.properties,epr.service.password,MHBwJGMhdA==,MHBwJGMhdA==

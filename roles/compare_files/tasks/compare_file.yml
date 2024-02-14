@@ -1,0 +1,29 @@
+- name: "Read file content {{ conf_file_name }} on server1"
+  shell: "cat {{ server1_config_temp_dir }}/{{ conf_file_name }} | grep -v '^#' |  grep -v '^$'"
+  register: server1_file_content
+
+- debug: var=server1_file_content
+
+- name: Convert to dictionary
+  set_fact:
+    config_dict_server1: "{{ config_dict_server1 | default({}) | combine({item.split('=', 1)[0]: item.split('=', 1)[1]}) }}"
+  loop: "{{ server1_file_content.stdout_lines }}"
+
+- name: "Read file content {{ conf_file_name }} on server2"
+  shell: "cat {{ server2_config_temp_dir }}/{{ conf_file_name }} | grep -v '^#' |  grep -v '^$'"
+  register: server2_file_content
+
+- name: Convert to dictionary
+  set_fact:
+    config_dict_server2: "{{ config_dict_server2 | default({}) | combine({item.split('=', 1)[0]: item.split('=', 1)[1]}) }}"
+  loop: "{{ server2_file_content.stdout_lines }}"
+
+- name: write content to csv row for {{ conf_file_name }}
+  vars:
+    csv_row: "{{conf_file_name}},{{config1.key}},{{config1.value}},{{config_dict_server2[config1.key] | d()}}"
+  lineinfile:
+    line: "{{ csv_row }}"
+    dest: output.csv
+  with_dict: "{{ config_dict_server1 }}" 
+  loop_control:
+    loop_var: config1
