@@ -28,7 +28,9 @@
 
 - name: write content to csv for each keyvalue pair in dict
   vars:
-    csv_row: "{{ conf_file_name }}, {{config1_tag_key}}_{{file1config.key}},{{file1config.value | replace(',','|')}},{{matching_dict[file1config.key] | replace(',','|') | d()}}"
+    #csv_row: "{{ conf_file_name }}, {{config1_tag_key}}_{{file1config.key}},{{file1config.value | replace(',','|')}},{{matching_dict[file1config.key] | replace(',','|') | d()}}"
+    csv_row: "{{ conf_file_name }}, {{config1_tag_key}}_{{file1config.key}},{{file1config.value | default('') | replace(',','|')}},{{matching_dict[file1config.key] | default('') | replace(',','|') | d()}}"
+
   lineinfile:
     line: "{{ csv_row }}"
     dest: output.csv
